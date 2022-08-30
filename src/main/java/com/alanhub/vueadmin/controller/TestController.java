@@ -1,5 +1,6 @@
 package com.alanhub.vueadmin.controller;
 
+import com.alanhub.vueadmin.common.lang.Result;
 import com.alanhub.vueadmin.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,7 @@ public class TestController {
     SysUserService sysUserService;
 
     @GetMapping("/test")
-    public Object test(){
-        return sysUserService.list();
+    public Result test(){
+        return Result.succ(sysUserService.list());
     }
 }
