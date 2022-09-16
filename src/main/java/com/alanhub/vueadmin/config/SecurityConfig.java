@@ -1,5 +1,8 @@
 package com.alanhub.vueadmin.config;
 
+import com.alanhub.vueadmin.security.LoginFailureHandler;
+import com.alanhub.vueadmin.security.LoginSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +14,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    LoginFailureHandler loginFailureHandler;
+
+    @Autowired
+    LoginSuccessHandler loginSuccessHandler;
 
     private static final String[] URL_WHITELIST={
             "/login",
@@ -24,8 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //登录配置
                 .formLogin()
-//                .successHandler()
-//                .failureHandler()
+                .successHandler(loginSuccessHandler)
+                .failureHandler(loginFailureHandler)
 
                 //禁用session
                 .and()
