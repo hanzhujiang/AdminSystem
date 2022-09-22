@@ -1,5 +1,6 @@
 package com.alanhub.vueadmin.config;
 
+import com.alanhub.vueadmin.security.CaptchaFilter;
 import com.alanhub.vueadmin.security.LoginFailureHandler;
 import com.alanhub.vueadmin.security.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -20,6 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     LoginSuccessHandler loginSuccessHandler;
+
+    @Autowired
+    CaptchaFilter captchaFilter;
 
     private static final String[] URL_WHITELIST={
             "/login",
@@ -45,9 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(URL_WHITELIST).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
 
                 //异常处理器
+
+                //配置自定义的过滤器
+                .and()
+                .addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 }
